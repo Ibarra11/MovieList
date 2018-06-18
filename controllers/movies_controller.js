@@ -9,22 +9,24 @@ module.exports = {
         }
         return movieArray;
     },
+    getMoviesByActor: (movie) =>{
+        movie.forEach(movie =>{
+            movieArray.push({title: movie.title, movieId: movie.id, movieImg: 'https://image.tmdb.org/t/p/w200' + movie.poster_path, overview: movie.overview })
+        })
+    },
     emptyMovieArray: () =>{
         movieArray = [];
-        console.log(movieArray);
     },
     deleteMovieFromMovieList: (movieId, movieListName) =>{
         for(let i = 0; i < movieList.length; i++){
             if(movieList[i].title == movieListName){
                 for(let j = 0; j < movieList[i].movies.length; j++){
-                    console.log(movieList[i].moviesId);
                     if(movieList[i].movies[j].movieId === +movieId){
                         movieList[i].movies.splice(j,1);
                     }
                 }
             }
         }
-        console.log(movieList);
     },
     createNewMovieList: (movieListName) =>{
         movieList.push({title: movieListName, movies: []})

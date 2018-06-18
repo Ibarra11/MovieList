@@ -31,6 +31,23 @@ class App extends Component {
       .catch(err => console.log(err))
   }
 
+  displayPopularMovies = () =>{
+    axios.get('/movies/api/popular')
+    .then(res => this.setState({
+      movies: res.data,
+      searchResults: true
+    }))
+    .catch(err => console.log(err))
+  }
+
+  displayMoviesByActor = actorName =>{
+    axios.get('movies/api/actor/name?name=' + actorName)
+    .then(res => this.setState({
+      movies: res.data,
+      searchResults: true
+    }) )
+  }
+
   /*
                                   CreateNewMovieList()
     This method creates a movielist name.  It is called when teh user clicks on the create MovieList button.  I pass this method
@@ -91,7 +108,7 @@ class App extends Component {
       <div className="app">
         <Header />
         <div className="main">
-          <NavBar displayMovieList={() => this.displayMovieList()} newMovieList={(name) => this.createNewMovieList(name)} movies={(searchTerm) => this.getMovies(searchTerm)} />
+          <NavBar actorSearch ={(actorName) => this.displayMoviesByActor(actorName)} displayPopularMovies= {() => this.displayPopularMovies()} displayMovieList={() => this.displayMovieList()} newMovieList={(name) => this.createNewMovieList(name)} movies={(searchTerm) => this.getMovies(searchTerm)} />
           <div className="movie-list">
             {
               this.state.searchResults ? <MovieArray addMovieToMovieList={(obj, movieList) => this.addMovieToMovieList(obj, movieList)} movieList={this.state.movieList} movies={this.state.movies} /> : <MovieList deleteMovieFromMovieList={(title, id) => this.deleteMovieFromMovieList(title,id) } movieList={this.state.movieList} />

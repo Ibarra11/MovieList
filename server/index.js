@@ -18,6 +18,7 @@ const POPULAR_URL = 'https://api.themoviedb.org/3/movie/popular?api_key=d43e471e
 const IMG = 'https://image.tmdb.org/t/p/w200';
 
 
+
 app.get('/movies/api/', (req, response) => {
     // req.query.get determines whether to get movielist or to get the  movies
     if (req.query.get === 'movielist') {
@@ -36,6 +37,32 @@ app.get('/movies/api/', (req, response) => {
     }
 
 })
+
+app.get('/movies/api/:movieCategory', (req,res) =>{
+    mc.emptyMovieArray();
+    axios.get('https://api.themoviedb.org/3/movie/popular?api_key=d43e471eb94c857ad73330205c6c8d6b&language=en-US&page=1')
+    .then(movies =>{
+        movies.data.results.forEach(movie =>{
+            mc.getSearchedMovies(movie);
+        })
+        res.send(mc.retrieveMovies());
+    })
+    .catch(err => console.log(err))
+})
+
+app.get('/movies/api/actor/name', (req,res) =>{
+    mc.emptyMovieArray();
+    axios.get(`${BASE_URL}search/person?api_key=${API_KEY}&language=en-US&query=${req.query.name}&page=1&include_adult=false`)
+    .then(movies =>{
+        movies.data.results.forEach((movie,index) =>{
+            mc.getMoviesByActor(movie.known_for);
+        })
+        res.send(mc.retrieveMovies());
+    })
+    .catch(err => console.log(err));
+})
+
+
 
 app.post('/movies/api', (req, res) => {
     if (req.body.name) {
